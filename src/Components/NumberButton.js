@@ -1,8 +1,8 @@
-function NumberButton({digit}) {
+function NumberButton({digit, id}) {
     return (
-        <div className="interface-btn">
+        <button id={id} className="interface-btn" >
             {digit}
-        </div>
+        </button>
     )
 }
 

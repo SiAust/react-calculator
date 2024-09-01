@@ -1,8 +1,8 @@
-function FunctionButton({symbol}) {
+function FunctionButton({symbol, id}) {
     return (
-        <div className="interface-btn">
+        <button id={id} className="interface-btn">
             <span>{symbol}</span>
-        </div>
+        </button>
     )
 }
 
