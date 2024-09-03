@@ -23,6 +23,10 @@
 
     background-color: var(--color4);
 
+    &:focus {
+        outline: 2px blue;
+     }
+
     &.function-btn {
         background-color: var(--color3);
      }
