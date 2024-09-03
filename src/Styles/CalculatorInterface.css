@@ -6,7 +6,11 @@
             'four five six add'
             'one two three equals'
             'zero zero decimal equals';
+    grid-gap: 1px;
     justify-items: center;
+
+    width: 100%;
+    height: 60%;
 }
 
 .interface-btn {
@@ -18,6 +22,14 @@
     color: white;
 
     background-color: var(--color4);
+
+    &.function-btn {
+        background-color: var(--color3);
+     }
+
+     &.number-btn {
+
+      }
 
     &#zero {
         grid-area: zero;

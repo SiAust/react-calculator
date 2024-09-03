@@ -1,7 +1,12 @@
-function FunctionButton({symbol, id}) {
+function FunctionButton({handleFunctionInput, label, id}) {
     return (
-        <button id={id} className="interface-btn">
-            <span>{symbol}</span>
+        <button
+            id={id}
+            className="interface-btn function-btn"
+            onClick={handleFunctionInput}
+            value={label}
+        >
+            {label}
         </button>
     )
 }
