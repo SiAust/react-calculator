@@ -1,10 +1,10 @@
-function NumberButton({handleNumberInput, symbol, id}) {
+function NumberButton({handleInput, symbol, id}) {
     return (
         <button
             id={id}
             tabIndex={symbol}
             className="interface-btn number-btn"
-            onClick={handleNumberInput}
+            onClick={handleInput}
             value={symbol}
             aria-label={`${id === "decimal" ? "Decimal" : `Number ${id}`} button`}
         >

@@ -1,8 +1,7 @@
 #display {
-    font-family: monospace;
-    font-size: 2rem;
+    height: 10%;
 
-    color: white;
+    color: blue;
 }
 
 #display-container {
@@ -12,6 +11,9 @@
     text-align: right;
 
     position: relative;
+
+    font-size: 2rem;
+    font-family: "Calculator", monospace;
 
     width: 100%;
     height: 40%;
@@ -25,11 +27,17 @@
     }
  }
 
+#term {
+    height: 10%;
+
+    color: white;
+}
+
 #history {
     height: 80%;
 
-    font-family: monospace;
-    font-size: 1.5rem;
+    /*font-family: monospace;*/
+    font-size: 1.2rem;
 
     color: orange;
 

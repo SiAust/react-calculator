@@ -1,3 +1,8 @@
+@font-face {
+  font-family: "Calculator";
+  src: url("./fonts/Calculator.ttf") format("truetype");
+}
+
 :root {
   --color1: cadetblue;
   --color2: lightblue;
