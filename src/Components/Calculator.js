@@ -8,7 +8,21 @@ function Calculator() {
     const [expression, setExpression] = useState([]);
 
     const [history, setHistory] = useState(["1 + 2 = 3"]);
-    const [result, setResult] = useState("");
+    const [result, setResult] = useState(0);
+
+    useEffect(() => {
+        document.addEventListener("keydown", keyPressHandler);
+        return () => document.removeEventListener("keydown", keyPressHandler)
+    });
+
+    useEffect(() => console.debug(`term: ${term}`, [term]));
+    useEffect(() => {
+        console.debug(`expression: ${expression}`);
+        if (expression[expression.length -1] === "=") {
+            calculateResult();
+            console.info(`Calculating result of ${expression}`);
+        }
+    }, [expression, calculateResult]);
 
     function keyPressHandler(e) {
         if (e.repeat) {
@@ -35,10 +49,11 @@ function Calculator() {
             case "-":
             case "+":
                 addToExpression(term, e.key);
-                setTerm("");
+                // setTerm("");
                 break;
             case "Enter":
-                calculateResult();
+                addToExpression(term, "=");
+                // calculateResult();
                 break;
             case "Escape": // allClear
                 allClear();
@@ -50,10 +65,6 @@ function Calculator() {
         }
     }
 
-    useEffect(() => {
-        document.addEventListener("keydown", keyPressHandler);
-        return () => document.removeEventListener("keydown", keyPressHandler)
-    })
 
     function handleInput(e) {
 
@@ -65,13 +76,14 @@ function Calculator() {
             case "divide":
                 addToExpression(term, e.target.value);
                 // reset term
-                setTerm("");
+                // setTerm("");
                 break;
             case "clear":
                 allClear();
                 break;
             case "equals":
-                calculateResult();
+                addToExpression(term, "=");
+                // calculateResult();
                 break;
             default:
                 if (termContainsDecimal() && e.target.value === ".") break;
@@ -86,7 +98,7 @@ function Calculator() {
     function addToExpression(...terms) { // for each
         for (let i = 0; i < terms.length; i++) {
             // If the preceding element is an operator and new input is an operator, replace previous operator
-            if (!terms[i]) {
+            if (!terms[i] && terms.length === 2) {
 
                 const updatedExpression = expression.map((element, index) => {
                     if (index === expression.length - 1) {
@@ -100,9 +112,10 @@ function Calculator() {
                 return;
             }
 
-            setExpression(prevState => [...prevState, terms[i]])
+            setExpression(prevState => [...prevState, terms[i]]);
+            console.info(`Added term "${terms[i]}" to expression. Expression now: ${expression}`);
         }
-
+        setTerm("");
     }
 
     /**
@@ -132,18 +145,18 @@ function Calculator() {
     function calculateResult() {
         console.log(expression);
         let tempResult = 0;
-        let expressionStr = expression
-            .join("")
-            .replaceAll(/(\d+)([-/*+])(?=\d+)/gm, "$1 $2 ");
-        console.log(expressionStr);
+
+        tempResult = expression.reduce((accumulator, currentValue, currentIndex) => {
+
+        })
         // for ()
-        setResult("" + 2);
+        setResult(tempResult);
         setHistory(prevState => [...prevState,
             expression
-                .join("")
-                .replaceAll(/(\d+)([-/*+])(?=\d+)/gm, "$1 $2 ")
-                .concat(" = ", result)]);
-        setExpression([0]);
+                .join(" ")
+                // .replaceAll(/(\d+)([-/*+])(?=\d+)/gm, "$1 $2 ")
+                .concat(` ${result}`)]);
+        setExpression([]); // allClear?
     }
 
     return (

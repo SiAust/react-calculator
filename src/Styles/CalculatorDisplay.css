@@ -42,4 +42,8 @@
     color: orange;
 
     overflow-y: scroll;
+
+    li:last-child {
+        font-size: 2rem;
+     }
 }
