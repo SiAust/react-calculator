@@ -4,6 +4,9 @@ import {useEffect, useState} from "react";
 
 function Calculator() {
 
+    const [operands, setOperands] = useState([]);
+    const [operators, setOperators] = useState([]);
+
     const [term, setTerm] = useState("");
     const [expression, setExpression] = useState([]);
 
@@ -20,9 +23,8 @@ function Calculator() {
         console.debug(`expression: ${expression}`);
         if (expression[expression.length -1] === "=") {
             calculateResult();
-            console.info(`Calculating result of ${expression}`);
         }
-    }, [expression, calculateResult]);
+    }, [expression]);
 
     function keyPressHandler(e) {
         if (e.repeat) {
@@ -95,15 +97,28 @@ function Calculator() {
 
     const termContainsDecimal = () => term.includes(".");
 
-    function addToExpression(...terms) { // for each
-        for (let i = 0; i < terms.length; i++) {
-            // If the preceding element is an operator and new input is an operator, replace previous operator
-            if (!terms[i] && terms.length === 2) {
+    /**
+     * Add the arguments to the expression. If @operand is falsy, change the last @operator to the
+     * current argument.
+     * @param operand {String=} Optional, the operand to add to the expression, preceding the operator. A single
+     * character matching one of [0,1,2,3,4,5,6,7,8,9,.]
+     * @param operator {String} Required. One of [+-/*=]
+     * */
+    function addToExpression(operand, operator) {
+            if (operand && !operand.match(/[\d.]/)) {
+                console.error(`Operand not valid: ${operand}`);
+                return;
+            }
+            if (!operator.match(/[/*-=+]/)) {
+                console.error(`Operator not valid: ${operator}`);
+                return;
+            }
+            if (!operand && operator) {
 
                 const updatedExpression = expression.map((element, index) => {
                     if (index === expression.length - 1) {
-                        console.info(`Replaced operator "${expression[expression.length - 1]}" with new operator "${terms[i + 1]}"`);
-                        return terms[i + 1];
+                        console.info(`Replaced operator "${expression[expression.length - 1]}" with new operator "${operator}"`);
+                        return operator;
                     } else {
                         return element;
                     }
@@ -112,9 +127,9 @@ function Calculator() {
                 return;
             }
 
-            setExpression(prevState => [...prevState, terms[i]]);
-            console.info(`Added term "${terms[i]}" to expression. Expression now: ${expression}`);
-        }
+            setExpression(prevState => [...prevState, operand, operator]);
+            console.info(`Added operand "${operand}" & operator ${operator} to expression. Expression now: ${expression}`);
+
         setTerm("");
     }
 
@@ -122,7 +137,7 @@ function Calculator() {
      * Clears the expression and the term.
      * */
     function allClear() {
-        console.info("Reset expression");
+        console.info("Cleared expression");
         setExpression([]);
         setTerm("");
     }
@@ -134,28 +149,28 @@ function Calculator() {
         // TODO
     }
 
-    const operators = {
-        "add": (a, b) => a + b,
-        "divide": (a, b) => a / b,
-        "subtract": (a, b) => a - b,
-        "multiply": (a, b) => a * b
+    const operations = {
+        "+": (a, b) => a + b,
+        "/": (a, b) => a / b,
+        "-": (a, b) => a - b,
+        "*": (a, b) => a * b
     }
 
 
     function calculateResult() {
-        console.log(expression);
-        let tempResult = 0;
+        console.info("Calculating result");
+        let tempResult = expression[0]; // set to initial value
+        console.log(`tempResult: ${tempResult}`);
+        for (let i = 2; i < expression.length - 1; i += 2) {
+            tempResult = operations[expression[i - 1]](+tempResult, +expression[i]);
+            console.log(`tempResult: ${tempResult}`);
+        }
 
-        tempResult = expression.reduce((accumulator, currentValue, currentIndex) => {
-
-        })
-        // for ()
         setResult(tempResult);
         setHistory(prevState => [...prevState,
             expression
                 .join(" ")
-                // .replaceAll(/(\d+)([-/*+])(?=\d+)/gm, "$1 $2 ")
-                .concat(` ${result}`)]);
+                .concat(` ${tempResult}`)]);
         setExpression([]); // allClear?
     }
 
