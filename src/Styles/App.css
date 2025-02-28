@@ -1,6 +1,6 @@
 @font-face {
   font-family: "Calculator";
-  src: url("./fonts/Calculator.ttf") format("truetype");
+  src: url("../fonts/Calculator.ttf") format("truetype");
 }
 
 :root {
@@ -33,13 +33,24 @@ button {
    }
 }
 
+footer {
+  margin: 1rem;
+}
+
 main {
+  position: relative;
+
   height: 50rem;
   width: 30rem;
 
   margin: 0 auto;
 
-  background-color: var(--color1);
+  background-color: black;
+  border: black .5rem solid;
+  box-sizing: content-box;
+
+  transform: translateY(-50%);
+  top: 50%;
 }
 
 /* Classes */

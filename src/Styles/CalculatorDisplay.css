@@ -1,7 +1,9 @@
 #display {
-    height: 10%;
+    height: 3rem;
 
-    color: blue;
+    color: white;
+
+    padding-right: 1rem;
 }
 
 #display-container {
@@ -12,7 +14,7 @@
 
     position: relative;
 
-    font-size: 2rem;
+    font-size: 3rem;
     font-family: "Calculator", monospace;
 
     width: 100%;
@@ -20,17 +22,17 @@
 
     background-color: black;
 
-    padding: .5rem;
+    padding: 1rem 0 1rem 1rem;
 
     ul {
         list-style-type: none;
     }
  }
 
-#term {
-    height: 10%;
+#expression {
+    height: 3rem;
 
-    color: white;
+    color: blue;
 }
 
 #history {
@@ -41,9 +43,20 @@
 
     color: orange;
 
+    padding-right: 1rem;
+
     overflow-y: scroll;
+    /*overflow-anchor: auto;*/
+
+    scrollbar-color: orange rgba(128, 128, 128, 0.98);
+    scrollbar-width: thin;
 
     li:last-child {
         font-size: 2rem;
      }
+}
+
+#history-anchor {
+    height: 1px;
+    overflow-anchor: auto;
 }

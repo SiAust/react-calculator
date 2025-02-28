@@ -1,14 +1,15 @@
 import "../Styles/CalculatorDisplay.css"
 
-function CalculatorDisplay({history, term, expression}) {
+function CalculatorDisplay({history, input, expression}) {
 
     return (
         <div id="display-container">
             <ul id="history">
                 {history.map((element, index) => <li key={index}>{element}</li>)}
+                <div id={"history-anchor"}></div>
             </ul>
-            <span id={"display"}>{expression}</span>
-            <span id="term">{term || 0}</span>
+            <span id="expression">{expression}</span>
+            <span id="display">{input || 0}</span>
         </div>
     )
 }

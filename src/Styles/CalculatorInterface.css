@@ -6,7 +6,7 @@
             'four five six add'
             'one two three equals'
             'zero zero decimal equals';
-    grid-gap: 1px;
+    grid-gap: 2px;
     justify-items: center;
 
     width: 100%;
@@ -81,12 +81,16 @@
         }
     &#equals {
             grid-area: equals;
+
+    background-color: darkgreen;
         }
     &#decimal {
             grid-area: decimal;
         }
     &#clear {
             grid-area: clear;
+
+            background-color: darkred;
         }
 
 

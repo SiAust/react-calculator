@@ -4,21 +4,17 @@ import {useEffect, useState} from "react";
 
 function Calculator() {
 
-    const [operands, setOperands] = useState([]);
-    const [operators, setOperators] = useState([]);
-
-    const [term, setTerm] = useState("");
+    const [input, setInput] = useState("");
     const [expression, setExpression] = useState([]);
 
     const [history, setHistory] = useState(["1 + 2 = 3"]);
-    const [result, setResult] = useState(0);
 
     useEffect(() => {
         document.addEventListener("keydown", keyPressHandler);
         return () => document.removeEventListener("keydown", keyPressHandler)
     });
 
-    useEffect(() => console.debug(`term: ${term}`, [term]));
+    useEffect(() => console.debug(`term: ${input}`, [input]));
     useEffect(() => {
         console.debug(`expression: ${expression}`);
         if (expression[expression.length -1] === "=") {
@@ -43,18 +39,20 @@ function Calculator() {
             case "9":
             case "0":
             case ".":
-                if (termContainsDecimal() && e.key === ".") break;
-                setTerm(prevState => prevState + e.key);
+                if (inputContainsDecimal() && e.key === ".") break;
+                setInput(prevState => prevState + e.key);
                 break;
             case "/":
             case "*":
-            case "-":
             case "+":
-                addToExpression(term, e.key);
+                addToExpression(input, e.key);
                 // setTerm("");
                 break;
+            case "-":
+                // add negative operand to the input
+                break;
             case "Enter":
-                addToExpression(term, "=");
+                addToExpression(input, "=");
                 // calculateResult();
                 break;
             case "Escape": // allClear
@@ -71,32 +69,53 @@ function Calculator() {
     function handleInput(e) {
 
         switch (e.target.id) {
-
-            case "add":
             case "subtract":
+                // setInput();
+                console.debug(`in subtract: ${lastInputIsAnOperator()}`);
+                if (lastInputIsAnOperator()) {
+                    // setInput(prevState => "-" + prevState);
+                    // break;
+                    if (input.match(/^-\d*$/)) {
+                        // The input is a negative number
+                        setInput(prevState => prevState.replace("-", ""));
+                        break;
+                    } else {
+                        setInput(prevState => "-" + prevState);
+                        break;
+                    }
+
+                }
+            case "add":
             case "multiply":
             case "divide":
-                addToExpression(term, e.target.value);
-                // reset term
+                addToExpression(input, e.target.value);
+                // reset input
                 // setTerm("");
                 break;
             case "clear":
                 allClear();
                 break;
             case "equals":
-                addToExpression(term, "=");
+                addToExpression(input, "=");
                 // calculateResult();
                 break;
             default:
-                if (termContainsDecimal() && e.target.value === ".") break;
-                setTerm(prevState => prevState + e.target.value);
-                console.info(`Added to term: ${e.target.value}. Term = ${term}`);
+                if (inputContainsDecimal() && e.target.value === ".") break;
+                if (e.target.value === "." && input.length === 0) {
+                    setInput(prevState => prevState + "0" + e.target.value);
+                    break;
+                }
+                if (input.length === 0 && e.target.value === "0") break;
+                setInput(prevState => prevState + e.target.value);
+                console.info(`Added to term: ${e.target.value}. Term = ${input}`);
                 break;
         }
     }
 
-    const termContainsDecimal = () => term.includes(".");
+    const inputContainsDecimal = () => input.includes(".");
 
+    // const lastOperatorIsMinus = () => expression[expression.length - 1] === "-";
+    const lastInputIsAnOperator = () => expression[expression.length - 1].match(/[-+*/]/); //todo
     /**
      * Add the arguments to the expression. If @operand is falsy, change the last @operator to the
      * current argument.
@@ -130,20 +149,21 @@ function Calculator() {
             setExpression(prevState => [...prevState, operand, operator]);
             console.info(`Added operand "${operand}" & operator ${operator} to expression. Expression now: ${expression}`);
 
-        setTerm("");
+        setInput("");
     }
+    // todo first input of 'minus' is a negative number, second click replacing last operator
 
     /**
-     * Clears the expression and the term.
+     * Clears the expression and the input.
      * */
     function allClear() {
         console.info("Cleared expression");
         setExpression([]);
-        setTerm("");
+        setInput("");
     }
 
     /**
-     * Clears only the term.
+     * Clears only the input.
      * */
     function clear() {
         // TODO
@@ -166,17 +186,17 @@ function Calculator() {
             console.log(`tempResult: ${tempResult}`);
         }
 
-        setResult(tempResult);
         setHistory(prevState => [...prevState,
             expression
                 .join(" ")
                 .concat(` ${tempResult}`)]);
         setExpression([]); // allClear?
+        setInput(tempResult + "");
     }
 
     return (
         <>
-            <CalculatorDisplay history={history} expression={expression} term={term}/>
+            <CalculatorDisplay history={history} expression={expression} input={input}/>
             <CalculatorInterface handleInput={handleInput}/>
         </>
     )
