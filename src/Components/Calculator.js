@@ -17,7 +17,46 @@ function Calculator() {
   useEffect(() => {
     console.debug(`expression: ${expression}`);
     if (expression[expression.length - 1] === "=") {
-      calculateResult();
+      const operations = {
+        "+": (a, b) => a + b,
+        "/": (a, b) => a / b,
+        "-": (a, b) => a - b,
+        "*": (a, b) => a * b,
+      };
+
+      console.info("Calculating result");
+      try {
+        const expressionString = expression.join("").replace("=", "");
+        // Get terms
+        const terms = expressionString.split(/(?<![+/*-])[+/*-]/);
+        const operators = expressionString.match(/(?<=\d+?)[+*/-](?=-?\d+)/g);
+        console.debug("Terms: ", terms);
+        console.debug("Operators: ", operators);
+
+        let result = 0;
+        let operator = "";
+        if (terms.length > 0) {
+          result = terms[0];
+          for (let i = 1; i < terms.length; i++) {
+            // Get the operator
+            operator = operators[i - 1];
+            const statement = `${result} ${operator} ${terms[i]}`;
+            result = operations[operator](+result, +terms[i]);
+
+            console.log(`Calculation: ${statement} = ${result}`);
+          }
+        }
+
+        // Clean up
+        setHistory((prevState) => [
+          ...prevState,
+          expression.join(" ").concat(` ${result}`),
+        ]);
+        setExpression([result]);
+        setInput(result + "");
+      } catch (error) {
+        console.error(error);
+      }
     }
   }, [expression]);
 
@@ -202,49 +241,6 @@ function Calculator() {
     console.info("Cleared expression");
     setExpression([]);
     setInput("");
-  }
-
-  const operations = {
-    "+": (a, b) => a + b,
-    "/": (a, b) => a / b,
-    "-": (a, b) => a - b,
-    "*": (a, b) => a * b,
-  };
-
-  function calculateResult() {
-    console.info("Calculating result");
-    try {
-      const expressionString = expression.join("").replace("=", "");
-      // Get terms
-      const terms = expressionString.split(/(?<![+/*-])[+/*-]/);
-      const operators = expressionString.match(/(?<=\d+?)[+*/-](?=-?\d+)/g);
-      console.debug("Terms: ", terms);
-      console.debug("Operators: ", operators);
-
-      let result = 0;
-      let operator = "";
-      if (terms.length > 0) {
-        result = terms[0];
-        for (let i = 1; i < terms.length; i++) {
-          // Get the operator
-          operator = operators[i - 1];
-          const statement = `${result} ${operator} ${terms[i]}`;
-          result = operations[operator](+result, +terms[i]);
-
-          console.log(`Calculation: ${statement} = ${result}`);
-        }
-      }
-
-      // Clean up
-      setHistory((prevState) => [
-        ...prevState,
-        expression.join(" ").concat(` ${result}`),
-      ]);
-      setExpression([result]);
-      setInput(result + "");
-    } catch (error) {
-      console.error(error);
-    }
   }
 
   return (
