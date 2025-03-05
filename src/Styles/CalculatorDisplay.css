@@ -8,7 +8,7 @@
 
 #display-container {
     display: flex;
-    justify-content: space-between;
+    justify-content: end;
     flex-direction: column;
     text-align: right;
 
@@ -27,16 +27,19 @@
     ul {
         list-style-type: none;
     }
- }
-
-#expression {
-    height: 3rem;
-
-    color: blue;
 }
 
+#expression {
+    min-height: 3rem;
+
+    color: blue;
+
+    word-wrap: break-word;
+}
+
+/* TODO float to top? */
 #history {
-    height: 80%;
+    /* height: 80%; */
 
     /*font-family: monospace;*/
     font-size: 1.2rem;
@@ -53,7 +56,7 @@
 
     li:last-child {
         font-size: 2rem;
-     }
+    }
 }
 
 #history-anchor {
